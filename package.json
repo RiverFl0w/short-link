@@ -1,0 +1,24 @@
+{
+  "name": "short-link",
+  "version": "1.0.0",
+  "description": "simple website",
+  "main": "app.js",
+  "scripts": {
+    "test": "node app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sampi0l/short-link.git"
+  },
+  "author": "sampi0l",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sampi0l/short-link/issues"
+  },
+  "homepage": "https://github.com/sampi0l/short-link#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1",
+    "nedb": "^1.8.0"
+  }
+}

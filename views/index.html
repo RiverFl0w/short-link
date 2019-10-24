@@ -1,0 +1,28 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>short Link Generator</title>
+  </head>
+  <body>
+    <form action="/short-link-generator" method="POST">
+      <label for="link"></label>
+      <input name="link" type="text" placeholder="your link here" />
+      <input type="submit" value="submit" />
+    </form>
+    <ul></ul>
+    <script>
+      ( async () => {
+        const get = await fetch("/short-link-storage");
+        const data = await get.json();
+
+        const $ul = document.querySelector('ul');
+        data.forEach(element => {
+            $ul.innerHTML += `<li>${element.url} - <a href="${element.shortedUrl}" target="_blank">${element.shortedUrl}</a></li>`
+        });
+      })();
+    </script>
+    <!-- <script src="public/script.js"></script> -->
+  </body>
+</html>
