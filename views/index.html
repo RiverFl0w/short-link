@@ -6,7 +6,7 @@
     <title>short Link Generator</title>
   </head>
   <body>
-    <form action="/short-link-generator" method="POST">
+    <form action="/post/short-link-generator" method="POST">
       <label for="link"></label>
       <input name="link" type="text" placeholder="your link here" />
       <input type="submit" value="submit" />
@@ -14,7 +14,7 @@
     <ul></ul>
     <script>
       ( async () => {
-        const get = await fetch("/short-link-storage");
+        const get = await fetch("/get/short-link-storage");
         const data = await get.json();
 
         const $ul = document.querySelector('ul');

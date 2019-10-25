@@ -4,21 +4,22 @@
   "description": "simple website",
   "main": "app.js",
   "scripts": {
-    "test": "node app.js"
+    "start": "node app.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sampi0l/short-link.git"
+    "url": "git+https://github.com/s4mpi0l/short-link.git"
   },
   "author": "sampi0l",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/sampi0l/short-link/issues"
+    "url": "https://github.com/s4mpi0l/short-link/issues"
   },
-  "homepage": "https://github.com/sampi0l/short-link#readme",
+  "homepage": "https://github.com/s4mpi0l/short-link#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "nedb": "^1.8.0"
+    "nedb": "^1.8.0",
+    "request-ip": "^2.1.3"
   }
 }
