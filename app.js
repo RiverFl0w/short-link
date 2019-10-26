@@ -1,12 +1,13 @@
 const express = require("express");
 const app = express();
-const PORT = 5000;
+const PORT = 8888;
 const __domain = "http://localhost:" + PORT + "/";
 
 const nedb = require("nedb");
 const bodyParser = require("body-parser");
 const generator = require("./string-generator");
 const requestIp = require("request-ip");
+const axios = require('axios');
 
 // const restrictMiddleWare = require("./middleware/restrict.middleware");
 
@@ -20,6 +21,7 @@ let generatedUrlUsersRecently = [];
 const db = new nedb("./database/linkDB");
 db.loadDatabase();
 
+//show all shorten url
 app.get("/get/short-link-storage", (request, response) => {
   db.find({}, (err, data) => {
     if (err) throw err;
@@ -27,16 +29,22 @@ app.get("/get/short-link-storage", (request, response) => {
   });
 });
 
+//go to origin url
 app.get("/:shortUrl", (request, response) => {
   const shortUrl = __domain + request.params.shortUrl;
   db.find({ shortedUrl: shortUrl }, (err, data) => {
     if (err) throw err;
+    if (data[0] == undefined) {
+      response.end();
+      return;
+    }
     response.redirect(data[0].url);
   });
 });
 
 app.post(
   "/post/short-link-generator",
+  //prevent generate multi time
   (request, response, next) => {
     const ip = request.clientIp;
     const userAgent = request.headers["user-agent"];
@@ -57,7 +65,8 @@ app.post(
 
     next();
   },
-  (request, response) => {
+  //checking the correct of url
+  (request, response, next) => {
     let url = request.body.link;
     if (!url) {
       response.send({ err: "link must be fill" });
@@ -71,6 +80,19 @@ app.post(
       url = "http://" + url;
     }
 
+    axios.get(url)
+      .then(() => {
+        request._url = url;
+        next();
+      })
+      .catch(() => {
+        response.send({ err: "invalid link" });
+        return;
+      })
+  },
+  //add url to database
+  (request, response) => {
+    const url = request._url;
     const shortedUrl = __domain + generator(6);
     db.insert({ url, shortedUrl }, (err, newData) => {
       if (err) throw err;
