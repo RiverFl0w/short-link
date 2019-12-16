@@ -1,24 +1,29 @@
 const fs = require("fs");
 const axios = require("axios");
 
-module.exports.preventGenerateUrlMultiTime = (request, response, next) => {
+module.exports.isRecentlyGenerateUser = (request, response, next) => {
   const ip = request.clientIp;
   const userAgent = request.headers["user-agent"];
-  const userIndentify = { ip, userAgent };
+  request.userIndentify = { ip, userAgent };
+  // const userIndentify = { ip, userAgent };
   let globalVariable = JSON.parse(
     fs.readFileSync(process.cwd() + "/global/variable.json", "utf-8")
   );
 
   if (
     globalVariable.generatedUrlUsersRecently.some(
-      userInfo => JSON.stringify(userInfo) === JSON.stringify(userIndentify)
+      userInfo => JSON.stringify(userInfo) === JSON.stringify(request.userIndentify)
     )
   ) {
     response.send({ err: "you generate url too fast" });
-    return;
-  }
+  } else next();
+};
 
-  globalVariable.generatedUrlUsersRecently.push(userIndentify);
+module.exports.addUserToBanList = (request, response, next) => {
+  let globalVariable = JSON.parse(
+    fs.readFileSync(process.cwd() + "/global/variable.json", "utf-8")
+  );
+  globalVariable.generatedUrlUsersRecently.push(request.userIndentify);
   fs.writeFileSync(
     process.cwd() + "/global/variable.json",
     JSON.stringify(globalVariable)
@@ -35,8 +40,7 @@ module.exports.preventGenerateUrlMultiTime = (request, response, next) => {
     );
   }, 10 * 1000);
 
-  next();
-};
+}
 
 module.exports.checkTheCorrectOfUrl = (request, response, next) => {
   let url = request.body.link;

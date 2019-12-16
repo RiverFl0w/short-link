@@ -42,10 +42,10 @@ app.get("/:shortUrl", (request, response) => {
 
 app.post(
   "/post/short-link-generator",
-  createShortUrlMiddleware.preventGenerateUrlMultiTime,
+  createShortUrlMiddleware.isRecentlyGenerateUser,
   createShortUrlMiddleware.checkTheCorrectOfUrl,
   //add url to database
-  (request, response) => {
+  (request, response, next) => {
     const url = request._url;
     const shortenUrl = __domain + generator(6);
     db.insert({ url, shortenUrl }, (err, newData) => {
@@ -53,7 +53,9 @@ app.post(
     });
 
     response.send({ shortenUrl });
-  }
+    next();
+  },
+  createShortUrlMiddleware.addUserToBanList
 );
 
 app.listen(PORT, (err, res) => {
