@@ -1,6 +1,6 @@
 function showPreviousShortenUrl() {
   $("ul").html("");
-  $.get("/get/short-link-storage", (data, status) => {
+  $.get("/api/v1/short-link-storage", (data, status) => {
     data.forEach(element => {
       const dataInDOM = `<li>${element.url} - <a href="${element.shortenUrl}" target="_blank">${element.shortenUrl}</a></li>`;
       $("ul").html($("ul").html() + dataInDOM);
@@ -14,7 +14,7 @@ $(document).ready(() => {
     e.preventDefault();
     $("span").html(`creating...`);
     const link = $('input[name="link"]').val();
-    $.post("/post/short-link-generator", { link }, (data, status) => {
+    $.post("/api/v1/short-link-generator", { link }, (data, status) => {
       if (data.err) {
         $("span").html(data.err);
       }

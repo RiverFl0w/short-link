@@ -20,7 +20,7 @@ const db = new nedb("./database/linkDB");
 db.loadDatabase();
 
 //show all shorten url
-app.get("/get/short-link-storage", (request, response) => {
+app.get("/api/v1/short-link-storage", (request, response) => {
   db.find({}, (err, data) => {
     if (err) throw err;
     response.send(data);
@@ -41,7 +41,7 @@ app.get("/:shortUrl", (request, response) => {
 });
 
 app.post(
-  "/post/short-link-generator",
+  "/api/v1/short-link-generator",
   createShortUrlMiddleware.isRecentlyGenerateUser,
   createShortUrlMiddleware.checkTheCorrectOfUrl,
   //add url to database
